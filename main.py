@@ -39,7 +39,8 @@ class MainHandler(webapp2.RequestHandler):
                     Email(optional)
                     <input type="text" name="Email"/>
                 </label>
-                <input type="submit" value="Add It"/>
+                <br>
+                <input type="submit" value="Submit"/>
             </form>
             """
             content = add_form
