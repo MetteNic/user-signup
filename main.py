@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 import webapp2
+import re
+import cgi
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -43,17 +45,33 @@ class MainHandler(webapp2.RequestHandler):
                 <input type="submit" value="Submit"/>
             </form>
             """
-            content = add_form
+            # if we have an error, make a <p> to display it
+            error = self.request.get("error")
+            if error:
+                error_element = (
+                    "<p class='error'>" +
+                    cgi.escape(error, quote=True) + "</p>")
+            else:
+                error_element = ""
+            content = add_form + error_element
             self.response.write(content)
 
 
 class Welcome(webapp2.RequestHandler):
 
 
+
     def post(self):
 
-        User = self.request.get("Username")
-        content = "welcome " + User
+        USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+
+        username = self.request.get("Username")
+        if not USER_RE.match(username):
+            error ="invalid username"
+            self.redirect("/?error=" + error)
+
+
+        content = "welcome " + username
         self.response.write(content)
 
 app = webapp2.WSGIApplication([
