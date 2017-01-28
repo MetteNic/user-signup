@@ -19,7 +19,7 @@ import webapp2
 class MainHandler(webapp2.RequestHandler):
     def get(self):
             add_form = """
-            <form  method="post">
+            <form action="/submit" method="post">
                 <label>
                     Username
                     <input type="text" name="Username"/>
@@ -46,6 +46,17 @@ class MainHandler(webapp2.RequestHandler):
             content = add_form
             self.response.write(content)
 
+
+class Welcome(webapp2.RequestHandler):
+
+
+    def post(self):
+
+        User = self.request.get("Username")
+        content = "welcome " + User
+        self.response.write(content)
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/submit', Welcome)
 ], debug=True)
