@@ -18,40 +18,44 @@ import webapp2
 import re
 import cgi
 
-form = """
-<form  method="post">
-    <label>
-        Username
-        <input type="text" name="username" value="{0}"/>
-    </label>
-    <span>{1}</span>
-    <br>
-    <label>
-        Password
-        <input type="password" name="password" value = ""/>
-    </label>
-    <span>{2}</span>
-    <br>
-    <label>
-        Verify Password
-        <input type="password" name="verify" value = ""/>
-    </label>
-    <span>{3}</span>
-    <br>
-    <label>
-        Email(optional)
-        <input type="text" name="email" value ="{4}" />
-    </label>
-    <span>{5}</span>
-    <br>
-    <input type="submit" value="Submit"/>
-</form>
-"""
+def write_form(username, user_error, password_error, verify_error, email, email_error):
+    form = """
+    <form  method="post">
+        <label>
+            Username
+            <input type="text" name="username" value="{0}"/>
+        </label>
+        <span>{1}</span>
+        <br>
+        <label>
+            Password
+            <input type="password" name="password" value = ""/>
+        </label>
+        <span>{2}</span>
+        <br>
+        <label>
+            Verify Password
+            <input type="password" name="verify" value = ""/>
+        </label>
+        <span>{3}</span>
+        <br>
+        <label>
+            Email(optional)
+            <input type="text" name="email" value ="{4}" />
+        </label>
+        <span>{5}</span>
+        <br>
+        <input type="submit" value="Submit"/>
+    </form>
+    """.format(username, user_error, password_error, verify_error, email, email_error)
+
+    return form
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-            blankForm = form.format("", "", "", "", "", "")
-            self.response.write(blankForm)
+            content = write_form("", "", "", "", "", "")
+            self.response.write(content)
 
     def post(self):
         username = self.request.get("username")
@@ -84,10 +88,10 @@ class MainHandler(webapp2.RequestHandler):
                 email_error = "That's not a valid email"
                 is_there_error = True
 
-        submitted_form = form.format(username, user_error, password_error, verify_error, email, email_error)
 
         if is_there_error == True:
-            self.response.write(submitted_form)
+            content = write_form(username, user_error, password_error, verify_error, email, email_error)
+            self.response.write(content)
 
         else:
             self.redirect("/welcome?username=" + username)
