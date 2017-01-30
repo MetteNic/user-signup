@@ -58,10 +58,10 @@ class MainHandler(webapp2.RequestHandler):
             self.response.write(content)
 
     def post(self):
-        username = self.request.get("username")
-        password = self.request.get("password")
-        verify = self.request.get("verify")
-        email = self.request.get("email")
+        username = cgi.escape(self.request.get("username"), quote=True)
+        password = cgi.escape(self.request.get("password"), quote=True)
+        verify = cgi.escape(self.request.get("verify"), quote=True)
+        email = cgi.escape(self.request.get("email"), quote=True)
         user_error = ""
         password_error = ""
         verify_error = ""
