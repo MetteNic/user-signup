@@ -20,41 +20,40 @@ import cgi
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-            add_form = """
+            form = """
             <form action="/submit" method="post">
                 <label>
                     Username
-                    <input type="text" name="Username"/>
+                    <input type="text" name="username" value="{0}"/>
                 </label>
+                <span>{1}</span>
                 <br>
                 <label>
                     Password
-                    <input type="password" name="Password"/>
+                    <input type="password" name="password" value = ""/>
                 </label>
+                <span>{2}</span>
                 <br>
                 <label>
                     Verify Password
-                    <input type="password" name="Verify"/>
+                    <input type="password" name="verify" value = ""/>
                 </label>
+                <span>{3}</span>
                 <br>
                 <label>
                     Email(optional)
-                    <input type="text" name="Email"/>
+                    <input type="text" name="email" value ="{4}" />
                 </label>
+                <span>{4}</span>
                 <br>
                 <input type="submit" value="Submit"/>
             </form>
             """
-            # if we have an error, make a <p> to display it
-            error = self.request.get("error")
-            if error:
-                error_element = (
-                    "<p class='error'>" +
-                    cgi.escape(error, quote=True) + "</p>")
-            else:
-                error_element = ""
-            content = add_form + error_element
-            self.response.write(content)
+            blankForm = form.format("", "", "", "", "")
+
+            self.response.write(blankForm)
+
+
 
 
 class Welcome(webapp2.RequestHandler):
@@ -65,7 +64,7 @@ class Welcome(webapp2.RequestHandler):
 
         USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 
-        username = self.request.get("Username")
+        username = self.request.get("username")
         if not USER_RE.match(username):
             error ="invalid username"
             self.redirect("/?error=" + error)
